@@ -3,7 +3,7 @@ module.exports = {
     mode: "development",
     entry: path.resolve(__dirname, 'client/index.js'),
     output: {
-        filename: "./build/bundle.js"
+        filename: "./dist/build/bundle.js"
     },
     target: "web",
     devServer: {
@@ -30,7 +30,12 @@ module.exports = {
                     presets: ['@babel/preset-env','@babel/preset-react']
                 }
             }
-            }
+            },
+            {
+                test: /\.css$/i,
+                include: path.resolve(__dirname, 'public'),
+                use: ['style-loader', 'css-loader', 'postcss-loader'],
+              }
         ]
     }
 }
