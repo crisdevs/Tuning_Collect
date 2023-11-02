@@ -1,21 +1,22 @@
 import React from "react";
 
-export default function Card(){
+export default function Card(props){
+   const {name, stringNumber, _id} = props.tuningProfile;
+   const tunings = Object.entries(props.tuningProfile.tunings);
+   const deleteTuning = () =>{
+    fetch(`api/tunings/${_id}`, {method:'DELETE'});
+   }
+   
     return(
         <div className = "text-white border w-52 flex flex-col items-center rounded-lg py-2">
-            <h2 >My Tuning Name</h2>
-            <p>Number of Strings: 6</p>
+            <h2 >{name}</h2>
+            <p>Number of Strings: {stringNumber}</p>
             <ul>
-                <li>E</li>
-                <li>A</li>
-                <li>D</li>
-                <li>G</li>
-                <li>B</li>
-                <li>E</li>
+               {tunings.map((tuning) =><li key = {tuning[0]}>{tuning[1]}</li>)}
             </ul>
             <div className = "mt-5">
                 <button className = "mr-3 border rounded p-2">Edit</button>
-                <button className = "border rounded p-2">Delete</button>
+                <button className = "border rounded p-2" onClick = {deleteTuning}>Delete</button>
             </div>
         </div>
     );

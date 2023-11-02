@@ -12,7 +12,6 @@ const tuningController = {
     },
     postTuning: async (req, res) => {
         try{    
-            console.log(req.body);
             const tuning = await Tuning.create({
                 name: req.body.name,
                 stringNumber: req.body.stringNumber,

@@ -13,7 +13,7 @@ module.exports = {
         hot: true,
         liveReload: true,
         proxy: {
-            '/api/tunings': {
+            '*': {
               target: 'http://localhost:3000/',
               secure: false,
             }
