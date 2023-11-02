@@ -3,7 +3,7 @@ import React from "react";
 export default function Card(props){
    const {name, stringNumber, _id} = props.tuningProfile;
    console.log();
-   const tunings = Object.entries(props.tuningProfile.tunings);
+   const tunings = Object.entries(props.tuningProfile.tunings).reverse();
    const deleteTuning = () =>{
     fetch(`api/tunings/${_id}`, {method:'DELETE'});
    }
