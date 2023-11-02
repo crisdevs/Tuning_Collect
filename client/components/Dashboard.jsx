@@ -37,6 +37,11 @@ export default function Dashboard(){
                         <Form stringNumber = {2} notes = {notes} tuningNotes = {tuningNotes}></Form>
                         <Form stringNumber = {1} notes = {notes} tuningNotes = {tuningNotes}></Form>
                     </div>
+                </fieldset>
+            </form>
+                <div className="modal-action">
+                    <form method="dialog">
+                    {/* if there is a button in form, it will close the modal */}
                     <button type="button" className = "btn" onClick = { async () => {
                         try{
                         await fetch("http://localhost:8080/api/tunings/", {
@@ -44,7 +49,7 @@ export default function Dashboard(){
                             body: JSON.stringify({
                                 name: name,
                                 stringNumber: numberOfStrings,
-                                tunings: {tuningNotes}
+                                tunings: tuningNotes
                             }),
                             headers: {
                                 'Content-Type' : 'application/json'
@@ -55,11 +60,6 @@ export default function Dashboard(){
                         console.log(error);
                     }
                     }}>Add</button>
-                </fieldset>
-            </form>
-                <div className="modal-action">
-                    <form method="dialog">
-                    {/* if there is a button in form, it will close the modal */}
                     <button className="btn">Close</button>
                     </form>
                 </div>
