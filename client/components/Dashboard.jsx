@@ -23,19 +23,19 @@ export default function Dashboard(){
                 <label className="mr-5">Name of Tuning</label>
                 <input type = "text" onChange ={ (event) => {name = event.target.value; console.log(name)}}/>
                 <label className="mr-5">Number of Strings</label>
-                <select onChange = {(event) => {numberOfStrings = event.target.value; console.log(numberOfStrings)}}>
+                <select value = "6" onChange = {(event) => {numberOfStrings = event.target.value;}}>
                     <option value = "6">6</option>
                     <option value = "7">7</option>
                 </select>
                 <fieldset className = "col-span-2">
                     <legend>Tunings</legend>
                     <div className = "grid grid-cols-2 gap-y-2">
-                        <Form stringNumber = {6} notes = {notes} tuningNotes = {tuningNotes}></Form>
-                        <Form stringNumber = {5} notes = {notes} tuningNotes = {tuningNotes}></Form>
-                        <Form stringNumber = {4} notes = {notes} tuningNotes = {tuningNotes}></Form>
-                        <Form stringNumber = {3} notes = {notes} tuningNotes = {tuningNotes}></Form>
-                        <Form stringNumber = {2} notes = {notes} tuningNotes = {tuningNotes}></Form>
-                        <Form stringNumber = {1} notes = {notes} tuningNotes = {tuningNotes}></Form>
+                        <Form stringNumber = {6} defaultNote = {"E"} notes = {notes} tuningNotes = {tuningNotes}></Form>
+                        <Form stringNumber = {5} defaultNote = {"A"} notes = {notes} tuningNotes = {tuningNotes}></Form>
+                        <Form stringNumber = {4} defaultNote = {"D"} notes = {notes} tuningNotes = {tuningNotes}></Form>
+                        <Form stringNumber = {3} defaultNote = {"G"} notes = {notes} tuningNotes = {tuningNotes}></Form>
+                        <Form stringNumber = {2} defaultNote = {"B"} notes = {notes} tuningNotes = {tuningNotes}></Form>
+                        <Form stringNumber = {1} defaultNote = {"E"} notes = {notes} tuningNotes = {tuningNotes}></Form>
                     </div>
                 </fieldset>
             </form>
