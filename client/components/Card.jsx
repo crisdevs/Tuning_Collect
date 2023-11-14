@@ -2,12 +2,14 @@ import React from "react";
 
 export default function Card(props){
    const {name, stringNumber, _id} = props.tuningProfile;
-   console.log();
    const tunings = Object.entries(props.tuningProfile.tunings).reverse();
    const deleteTuning = () =>{
     fetch(`api/tunings/${_id}`, {method:'DELETE'});
+
+    fetch("api/tunings/")
+        .then(data => data.json())
+        .then(response => props.setTune(response));
    }
-   console.log(tunings);
    
     return(
         <div className = "text-white border w-52 flex flex-col items-center rounded-lg py-2">
