@@ -3,7 +3,7 @@ import React from "react";
 export default function Card(props){
    const {name, stringNumber, _id} = props.tuningProfile;
    const tunings = Object.entries(props.tuningProfile.tunings).reverse();
-
+    console.log(tunings);
    const deleteTuning = () => {
     fetch(`api/tunings/${_id}`, {method:'DELETE'})
     .then(() => props.setTune((prevState) => prevState.filter(state => state._id !== _id)));
