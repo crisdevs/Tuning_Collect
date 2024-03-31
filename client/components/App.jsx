@@ -3,10 +3,10 @@ import Dashboard from './Dashboard.jsx';
 import Nav from './Nav.jsx';
 
 const App = ()=>{
-    return <div>
+    return <>
         <Nav />
         <Dashboard />
-    </div>
+    </>
 }
 
 export default App

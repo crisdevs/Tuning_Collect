@@ -1,12 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { render } from "react-dom";
+import React, {useState ,useEffect} from "react";
 import Select from "./Select.jsx";
 
 export default function Form(props) {
-    const [formData, setFormData] = useState({ _id: "", name: "", stringNumber: "6", tunings: { 6: "E", 5: "A", 4: "D", 3: "G", 2: "B", 1: "E" } });
+    const [formData, setFormData] = useState(props.tuningProfile);
     const notes = ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"];
+    window.addEventListener("keydown", (e) =>{
+        if(e.key === "Escape"){
+            resetForm();
+        }
+    });
+
     const handleChange = (event) => {
         const { name, value } = event.target;
+    
         setFormData((prevState) => {
             if (name === "tuningNotes") {
                 return { ...prevState, tunings: { ...prevState.tunings, [event.target.id]: value } }
@@ -35,15 +41,68 @@ export default function Form(props) {
         return arr;
     }
 
+    const resetForm = () =>{
+        setFormData({ _id: "", name: "", stringNumber: "6", tunings: { 6: "E", 5: "A", 4: "D", 3: "G", 2: "B", 1: "E" } });
+        props.setEdit(false);
+    }
+
+    const createNewTuning = () => {
+        console.log("Added");
+        try {
+            fetch("http://localhost:8080/api/tunings/", {
+                method: 'POST',
+                body: JSON.stringify({
+                    name: formData.name,
+                    stringNumber: formData.stringNumber,
+                    tunings: formData.tunings
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(data => data.json()).then((res) => { props.setTunings((prevState) => [...prevState, { "_id": res._id, "name": res.name, "stringNumber": res.stringNumber, "tunings": res.tunings }])});
+            // resetForm();
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+
+    const editTuning = () =>{
+        console.log("Edited");
+        try {
+            fetch(`http://localhost:8080/api/tunings/${formData._id}`, {
+                method: 'PUT',
+                body: JSON.stringify({
+                    name: formData.name,
+                    stringNumber: formData.stringNumber,
+                    tunings: formData.tunings
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(data => data.json()).then(() => {props.setTunings((prevState) => {
+                    for(let i =0; i < prevState.length; i++){
+                        if(prevState[i]._id === formData._id){
+                            prevState[i] = formData;
+                            return prevState;
+                        }
+                    }})});
+            // resetForm();
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+
     return (
-        <>
-            <div className="modal-box" hx-swap="none">
-                <h3 className="font-bold text-lg">Create Tuning</h3>
-                <form className="grid grid-cols-2 gap-y-2">
+            <div className="bg-[#0a1828] border-primary border-2" hx-swap="none">
+                <h3 className="font-bold text-[24px] text-center mb-[25px] text-primary">Create Tuning</h3>
+                <form className="grid grid-cols-2 gap-y-2 justify-items-center text-white">
                     <label htmlFor="name" className="mr-5">Name of Tuning</label>
-                    <input name="name" type="text" onChange={handleChange} value={formData.name} />
+                    <input className = "w-full rounded-md bg-primary opacity-80" name="name" id = "name" type="text" onChange={handleChange} value={formData.name} />
+                    
                     <label htmlFor="stringNumber" className="mr-5">Number of Strings</label>
-                    <select name="stringNumber" value={formData.stringNumber}
+                    <select className = "w-full rounded-md bg-primary opacity-80" name="stringNumber" id = "stringNumber" value={formData.stringNumber}
                         onChange={(event) => {
                             handleChange(event);
                         }}>
@@ -51,41 +110,23 @@ export default function Form(props) {
                         <option value={"7"}>7</option>
                     </select>
                     <fieldset className="col-span-2">
-                        <legend>Tunings</legend>
+                        <legend className = "text-xl py-[20px] text-center text-primary font-bold">Strings</legend>
                         <div className="grid grid-cols-2 gap-y-2">
                             {renderSelect(parseInt(formData.stringNumber))}
                         </div>
                     </fieldset>
-                </form>
-                <div className="modal-action">
-                    <form method="dialog">
-                        {/* if there is a button in form, it will close the modal */}
-                        <button type="submit" className="btn" onClick={() => {
-                            try {
-                                fetch("http://localhost:8080/api/tunings/", {
-                                    method: 'POST',
-                                    body: JSON.stringify({
-                                        name: formData.name,
-                                        stringNumber: formData.stringNumber,
-                                        tunings: formData.tunings
-                                    }),
-                                    headers: {
-                                        'Content-Type': 'application/json'
-                                    }
-                                }).then(data => data.json()).then((res) => { props.setTunings((prevState) => [...prevState, { "_id": res._id, "name": res.name, "stringNumber": res.stringNumber, "tunings": res.tunings }]) });
-                                setFormData(
-                                    () => {
-                                        return { _id: "", name: "", stringNumber: "6", tunings: { 6: "E", 5: "A", 4: "D", 3: "G", 2: "B", 1: "E" } }
-                                    });
+                    <div className="justify-center">
+                        <button type="submit" className=" text-white border-primary border-2 border-solid rounded-md py-2 px-5 mr-[40px] hover:bg-primary" onClick={() => {
+                            if(props.intention === "Create"){
+                            createNewTuning();
                             }
-                            catch (err) {
-                                console.log(err);
+                            else if(props.intention === "Edit"){
+                                editTuning();
                             }
-                        }}>Add</button>
-                        <button className="btn">Close</button>
-                    </form>
+                            }}>Add</button>
+                        <button className="text-white border-primary border-2 border-solid rounded-md py-2 px-5 hover:bg-primary" onClick={resetForm}>Close</button>
                 </div>
+                </form>
             </div >
-        </>
     );
 }
