@@ -4,6 +4,7 @@ import { TuningContext } from "./Dashboard.jsx";
 
 export default function Form(props) {
     const store = useContext(TuningContext);
+    const [isError, setError] = useState(false);
     const defaultTuningProfile = {
          _id: "", 
          name: "", 
@@ -26,7 +27,6 @@ export default function Form(props) {
             store.setCreate(false);
         }
     });
-
     const handleChange = (event) => {
         const { name, value } = event.target;
     
@@ -75,11 +75,25 @@ export default function Form(props) {
                  store.setTunings((prevState) => [...prevState, { "_id": res._id, "name": res.name, "stringNumber": res.stringNumber, "tunings": res.tunings }]);
                  store.setCreate(false);
                 });
-            //To prevent the page from refreshing
-            event.preventDefault();
         }
         catch (err) {
             console.log(err);
+        }
+     //To prevent the page from refreshing
+     event.preventDefault();
+    }
+
+    const checkError = () =>{
+        const specialChar = /[*|\":<>[\]{}`\\()';@&$!#%^+=]/;
+        const spaces = /^\s+$/;
+        const nameInput = document.querySelector("#name");
+        if(specialChar.test(nameInput.value) || spaces.test(nameInput.value) || nameInput.value.length < 1){
+            setError(true);
+            nameInput.style.border = "2px solid red";
+         }
+        else{
+            setError(false);
+            nameInput.style.border = "none";
         }
     }
 
@@ -118,7 +132,14 @@ export default function Form(props) {
                 <h3 className="font-bold text-[24px] text-center mb-[25px] text-primary">Create Tuning</h3>
                 <form className="grid grid-cols-2 gap-y-2 justify-items-center text-white">
                     <label htmlFor="name" className="mr-5">Name of Tuning</label>
-                    <input className = "w-full rounded-md bg-primary opacity-80" name="name" id = "name" type="text" onChange={handleChange} value={formData.name} />
+                    <div>
+                    <input className = {`w-full rounded-md bg-primary opacity-80v ${isError && "focus:outline-none"}`} maxLength = {18} name="name" id = "name" type="text" onChange={(e) => {
+                        checkError();
+                        handleChange(e);
+                        }
+                        } value={formData.name}/>
+                    {isError && <p className = "text-red-600">Must be filled</p>}
+                    </div>
                     <label htmlFor="stringNumber" className="mr-5">Number of Strings</label>
                     <select className = "w-full rounded-md bg-primary opacity-80" name="stringNumber" id = "stringNumber" value={formData.stringNumber}
                         onChange={(event) => {
@@ -134,10 +155,12 @@ export default function Form(props) {
                         </div>
                     </fieldset>
                         <button type="submit" className="text-white border-primary border-2 border-solid rounded-md py-2 px-5 mr-[40px] hover:bg-primary" onClick={(e) => {
-                            if(store.isCreate){
+                            checkError();
+                            e.preventDefault();
+                            if(store.isCreate && !isError){
                             createNewTuning(e);
                             }
-                            else if(store.isEdit){
+                            else if(store.isEdit && !isError){
                                 editTuning(e);
                             }
                             }}>Add</button>

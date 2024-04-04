@@ -2,7 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+*{
+    box-sizing: border-box;
+}
+
 body{
+    min-height: 100vh;
     background-color: #0a1828;
-    height: 100vh;
 }

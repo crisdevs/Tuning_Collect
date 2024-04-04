@@ -6,10 +6,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'primary': '#3BBA9C', 
+        'primary': '#6366f1', 
+        'main': '#0a1828'
       }
     },
-  },
-  plugins: [require("daisyui")],
+  }
 }
 
